@@ -22,7 +22,7 @@ def post_lampada_ligada():
 # Rota post para o fotoressitor acessar e nela aparecer que a Desligada está ligada no HTML
 @app.route("/post/lampada/desligada"  , methods = ["POST"])
 def post_lampada_desligada():
-    return render_template("pagina_lampada.html", situacao_lampada = "lampada_desligada")
+    return render_template("pagina_lampada.html", situacao_lampada = "Lampada Está DesLigada")
 
 # Para iniciar o app
 app.run()
