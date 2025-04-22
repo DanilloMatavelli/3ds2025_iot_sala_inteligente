@@ -12,17 +12,22 @@ situacao_lampada = ""
 @app.route("/")
 @app.route("/lampada")
 def pagina_dashboard():
-    return render_template("pagina_lampada.html")
+    return f"A LÂMPADA ESTÁ {situacao_lampada}"
 
 # Rota post para o fotoressitor acessar e nela aparecer que a Lâmpada está ligada no HTML
-@app.route("/post/lampada/ligada"  , methods = ["POST"])
+@app.route("/post/lampada/ligada")
 def post_lampada_ligada():
-    return render_template("pagina_lampada.html", situacao_lampada = "Lampada Está Ligada")
+    global situacao_lampada
+    situacao_lampada = "LIGADO"
+    return f"A lampada está {situacao_lampada}"
 
 # Rota post para o fotoressitor acessar e nela aparecer que a Desligada está ligada no HTML
-@app.route("/post/lampada/desligada"  , methods = ["POST"])
+@app.route("/post/lampada/desligada")
 def post_lampada_desligada():
-    return render_template("pagina_lampada.html", situacao_lampada = "Lampada Está DesLigada")
+    global situacao_lampada
+    situacao_lampada = "DESLIGADO"
+    return f"A lampada está {situacao_lampada}"
+
 
 # Para iniciar o app
 app.run()
