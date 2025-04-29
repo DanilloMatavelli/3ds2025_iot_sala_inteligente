@@ -2,16 +2,23 @@ import hashlib
 from flask import Flask, jsonify, render_template, request, redirect, session, flash
 import datetime
 
-
 app = Flask(__name__)
 
 situacao_lampada = ""
+
+
 
 # Para abrir a página HTML
 @app.route("/")
 @app.route("/lampada")
 def pagina_dashboard():
-    return f"A LÂMPADA ESTÁ {situacao_lampada}"
+    return render_template("pagina_lampada.html" f"A LÂMPADA ESTÁ {situacao_lampada}")
+    
+
+# Para abrir a página led
+@app.route("/led")
+def pagina_dashboard():
+    return render_template("pagina_led.html")
 
 # Rota post para o fotoressitor acessar e nela aparecer que a Lâmpada está ligada no HTML
 @app.route("/post/lampada/ligada")
@@ -33,5 +40,5 @@ def get_estado_lampada():
     return jsonify({"ESTADO_LAMPADA" : situacao_lampada})
     
 
-# Para iniciar o app
-app.run()
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8080)
