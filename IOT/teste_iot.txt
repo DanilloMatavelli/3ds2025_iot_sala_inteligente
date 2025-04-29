@@ -1,60 +1,65 @@
 #include<WiFi.h>
 #include <HTTPClient.h>
-const char* rede_wifi = "Wokwi-GUEST"; //O nome da rede Wifi
-const char* senha_wifi = ""; //A senha da rede
-void conectarWiFi() {...
+const char* rede_wifi = "Wokwi-GUEST"; 
+const char* senha_wifi = ""; 
+
+const byte FOTORESISTOR = A0;
+int valorFoto;
+
+void conectarWiFi() {
+  rede.addAP(rede_wifi, senha_wifi); 
+  Serial.print("Conectando ao WiFi");
+
+  while (rede.run() != WL_CONNECTED) { 
+    delay(1000);
+    Serial.print(".");
+  }
+  
+  Serial.println("\nWiFi Conectado!");
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.print("MAC: ");
+  Serial.println(WiFi.macAddress());
 }
+
 void setup(){
-Serial.begin(115200); //Iniciando o serial para imprimir no monitor
 conectarWiFi();
+Serial.begin(9600);
+pinMode(FOTORESISTOR, INPUT);
 }
+
 void loop(){
-HTTPClient http; //Instanciando a classe
+HTTPClient http; 
 http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/ligada"); 
-int httpResponCode = http.GET(); //Enviando requisição
-Serial.println(httpResponCode); //Verificando a resposta
+int httpResponCode = http.GET();
+Serial.println(httpResponCode); 
 if(httpResponCode == 200){
-respostaJson = http.getString(); //Guarda a resposta como uma String
+respostaJson = http.getString(); 
 Serial.print(respostaJson);
 }else{
 Serial.print("error ");
 Serial.println(httpResponCode);
 }
-}
 
 
-
-
-
-
-Codig0 led
-
-const byte led = 5;
-const byte botao_liga = 8;
-const byte botao_desliga = 9;
-// bool led_ligado = false;
-
-void setup() {
-  pinMode(led, OUTPUT);
-  pinMode(botao_liga, INPUT_PULLUP);
-  pinMode(botao_desliga, INPUT_PULLUP);
-  Serial.begin(115200);
-}
-
-void loop() {
-  if (digitalRead(botao_liga) == LOW) {
-    delay(50); 
-    if (digitalRead(botao_liga) == LOW) {
-      led_ligado = true;
+HTTPClient http;
+  valorFoto = analogRead(FOTORESISTOR);
+  if(valorFoto<=500){
+    http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/ligada"); 
+    int httpResponCode = http.GET();
+    Serial.println(httpResponCode); 
+    if(!httpResponCode == 200){
+      Serial.print("error ");
+      Serial.println(httpResponCode);
+    }
+  }else{
+  	http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/desligada"); 
+    int httpResponCode = http.GET();
+    Serial.println(httpResponCode); 
+    if(!httpResponCode == 200){
+      Serial.print("error ");
+      Serial.println(httpResponCode);
     }
   }
 
-  if (digitalRead(botao_desliga) == LOW) {
-    delay(50); 
-    if (digitalRead(botao_desliga) == LOW) {
-      led_ligado = false;
-    }
-  }
-
-  digitalWrite(led, led_ligado ? HIGH : LOW);
 }
