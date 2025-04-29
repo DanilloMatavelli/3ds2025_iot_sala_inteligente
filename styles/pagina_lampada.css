@@ -53,3 +53,7 @@
     height: auto;
     margin-top: 80px;    
 }
+
+.btn:hover{
+    opacity: 80%;
+}
