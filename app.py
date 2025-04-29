@@ -1,8 +1,7 @@
 import hashlib
 from flask import Flask, jsonify, render_template, request, redirect, session, flash
 import datetime
-import mysql.connector
-from data.conexao import Conexao
+
 
 app = Flask(__name__)
 
