@@ -11,8 +11,8 @@ situacao_lampada = ""
 # Para abrir a página HTML
 @app.route("/")
 @app.route("/lampada")
-def pagina_dashboard():
-    return render_template("pagina_lampada.html" f"A LÂMPADA ESTÁ {situacao_lampada}")
+def pagina_lampada():
+    return render_template("pagina_lampada.html")
     
 
 # Para abrir a página led
