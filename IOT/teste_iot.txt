@@ -1,33 +1,84 @@
-#LED ACENDE E DESLIGA COM BOTÕES
+#include <WiFi.h>
+
 
 const byte led = 5;
 const byte botao_liga = 8;
 const byte botao_desliga = 9;
+int fotorresistor = 34;
+
+const char* ssid = "Wokwi-guest";
+const char* password = "";
+const char* host = "https://sala-inteligente1-nsrl.onrender.com/get/estado_lampada"; 
 
 bool led_ligado = false;
 
 void setup() {
+  Serial.begin(115200);
+  delay(100);
+
   pinMode(led, OUTPUT);
-  pinMode(botao_liga, INPUT_PULLUP);     
-  pinMode(botao_desliga, INPUT_PULLUP); 
+  pinMode(botao_liga, INPUT_PULLUP);
+  pinMode(botao_desliga, INPUT_PULLUP);
+
+  // Conecta ao Wi-Fi
+  Serial.print("Conectando a ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+  Serial.println("WiFi conectado");
+
+  // Fotoressistor
+
+  Serial.begin(115200);
 }
 
 void loop() {
   if (digitalRead(botao_liga) == LOW) {
-    delay(50); 
+    delay(50);
     if (digitalRead(botao_liga) == LOW) {
       led_ligado = true;
     }
   }
-
   if (digitalRead(botao_desliga) == LOW) {
-    delay(50); 
+    delay(50);
     if (digitalRead(botao_desliga) == LOW) {
       led_ligado = false;
     }
   }
-
   digitalWrite(led, led_ligado ? HIGH : LOW);
+
+  // Envia requisição HTTP
+  WiFiClient client;
+  const int httpPort = 80;
+
+  if (!client.connect(host, httpPort)) {
+    Serial.println("Falha na conexão");
+    return;
+  }
+
+  client.print(String("GET") + "/https://sala-inteligente1-nsrl.onrender.com/get/estado_lampada" + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+
+  while (client.connected()) {
+    String line = client.readStringUntil('\n');
+    if (line == "\r") break;
+  }
+
+  while (client.available()) {
+    String line = client.readStringUntil('\n');
+    Serial.println(line);
+  }
+
+  delay(10000);
+
+  // Fotorresistor
+  int valorLuz = analogRead(fotorresistor);
+  Serial.println(valorLuz);
+  delay(500);
 }
-
-
