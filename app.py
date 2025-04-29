@@ -19,14 +19,14 @@ def pagina_dashboard():
 def post_lampada_ligada():
     global situacao_lampada
     situacao_lampada = "LIGADO"
-    return f"A lampada está {situacao_lampada}"
+    return jsonify ({"mensagem": "Alterado para LIGADO"})
 
 # Rota post para o fotoressitor acessar e nela aparecer que a Desligada está ligada no HTML
 @app.route("/post/lampada/desligada")
 def post_lampada_desligada():
     global situacao_lampada
     situacao_lampada = "DESLIGADO"
-    return f"A lampada está {situacao_lampada}"
+    return jsonify ({"mensagem": "Alterado para DESLIGADO"})
 
 
 # Para iniciar o app
