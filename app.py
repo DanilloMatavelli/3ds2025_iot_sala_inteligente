@@ -1,8 +1,6 @@
 import hashlib
 from flask import Flask, jsonify, render_template, request, redirect, session, flash
 import datetime
-import mysql.connector
-from data.conexao import Conexao
 
 app = Flask(__name__)
 
@@ -14,7 +12,8 @@ situacao_lampada = ""
 @app.route("/")
 @app.route("/lampada")
 def pagina_dashboard():
-    return f"A LÂMPADA ESTÁ {situacao_lampada}"
+    return render_template("pagina_lampada.html" f"A LÂMPADA ESTÁ {situacao_lampada}")
+    
 
 # Para abrir a página led
 @app.route("/led")
