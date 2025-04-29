@@ -1,5 +1,5 @@
 async function atualizarStatus() {
-    const resposta = await fetch('https://sala-inteligente-nsrl.onrender.com/get/estado_lampada');
+    const resposta = await fetch('https://sala-inteligente1-nsrl.onrender.com/get/estado_lampada');
     const dados = await resposta.json();
     const estado = dados.ESTADO_LAMPADA;
 

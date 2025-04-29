@@ -1,15 +1,44 @@
-#LED ACENDE E DESLIGA COM BOTÕES
+#include<WiFi.h>
+#include <HTTPClient.h>
+const char* rede_wifi = "Wokwi-GUEST"; //O nome da rede Wifi
+const char* senha_wifi = ""; //A senha da rede
+void conectarWiFi() {...
+}
+void setup(){
+Serial.begin(115200); //Iniciando o serial para imprimir no monitor
+conectarWiFi();
+}
+void loop(){
+HTTPClient http; //Instanciando a classe
+http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/ligada"); 
+int httpResponCode = http.GET(); //Enviando requisição
+Serial.println(httpResponCode); //Verificando a resposta
+if(httpResponCode == 200){
+respostaJson = http.getString(); //Guarda a resposta como uma String
+Serial.print(respostaJson);
+}else{
+Serial.print("error ");
+Serial.println(httpResponCode);
+}
+}
+
+
+
+
+
+
+Codig0 led
 
 const byte led = 5;
 const byte botao_liga = 8;
 const byte botao_desliga = 9;
-
-bool led_ligado = false;
+// bool led_ligado = false;
 
 void setup() {
   pinMode(led, OUTPUT);
-  pinMode(botao_liga, INPUT_PULLUP);     
-  pinMode(botao_desliga, INPUT_PULLUP); 
+  pinMode(botao_liga, INPUT_PULLUP);
+  pinMode(botao_desliga, INPUT_PULLUP);
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -29,5 +58,3 @@ void loop() {
 
   digitalWrite(led, led_ligado ? HIGH : LOW);
 }
-
-
