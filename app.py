@@ -28,6 +28,11 @@ def post_lampada_desligada():
     situacao_lampada = "DESLIGADO"
     return jsonify ({"mensagem": "Alterado para DESLIGADO"})
 
+@app.route("/get/estado_lampada")
+def get_estado_lampada():
+    global situacao_lampada
+    return jsonify({"ESTADO_LAMPADA" : situacao_lampada})
+    
 
 # Para iniciar o app
 app.run()
