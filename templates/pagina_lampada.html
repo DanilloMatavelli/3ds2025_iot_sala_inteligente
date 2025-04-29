@@ -8,6 +8,35 @@
     <link rel="stylesheet" href="/styles/pagina_lampada.css">
 
 
+    <script>
+
+        function atualizarEstadoLampada() {
+            fetch('/get/estado_lampada')
+            .then(response => response.json())
+            .then(data => {
+                const estado = data.ESTADO_LAMPADA;
+                const statusDiv = document.querySelector('.status');
+                statusDiv.innerHTML = `
+                <div id="icone" class="status-icon">💡</div>
+                <div>${estado}</div>
+                `;
+                if (estado === "LIGADO") {
+                document.getElementById('icone').style.color = "yellow";
+                } else {
+                document.getElementById('icone').style.color = "gray";
+                }
+            })
+            .catch(erro => console.error("Erro ao buscar estado da lâmpada:", erro));
+        }
+
+        // Atualiza o estado a cada 1 segundo
+        setInterval(atualizarEstadoLampada, 1000);
+
+        // Chamada inicial
+        atualizarEstadoLampada();
+
+    </script>
+
 </head>
 <body class="container-body">
     
