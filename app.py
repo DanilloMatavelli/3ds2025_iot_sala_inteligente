@@ -5,6 +5,7 @@ import datetime
 app = Flask(__name__)
 
 situacao_lampada = ""
+situacao_led = ""
 
 
 
@@ -38,7 +39,32 @@ def post_lampada_desligada():
 def get_estado_lampada():
     global situacao_lampada
     return jsonify({"ESTADO_LAMPADA" : situacao_lampada})
-    
+
+# Rota para acender ou desligar o led
+
+# Rota led ligado
+@app.route("/post/led/ligado")
+def led_ligado():
+    global situacao_led
+    situacao_led = "LIGADO"
+    return jsonify({"ESTADO_LED" : situacao_led})
+
+# Rota Led Desligado
+@app.route("/post/led/desligado")
+def led_desligado():
+    global situacao_led
+    situacao_led = "DESLIGADO"
+    return jsonify({"ESTADO_LED" : situacao_led})
+
+# Estado Do Led
+@app.route("/post/estado_led")
+def get_estado_lampada():
+    return render_template('pagina_led.html')
+
+@app.route("/api/estado_led", methods = ["GET", "POST"])
+def situacao_led_api():
+    return jsonify({"o estado é": situacao_led})
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
