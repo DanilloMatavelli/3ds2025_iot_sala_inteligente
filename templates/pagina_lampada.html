@@ -74,9 +74,9 @@
 
 
 <script>
-
+        const resultadoLampada = document.getElementById('resultado')
         async function atualizarStatus() {
-            const resposta = await fetch('https://sala-inteligente1-nsrl.onrender.com/get/estado_lampada');
+            const resposta = await fetch('https://sala-inteligente1.onrender.com/get/estado_lampada');
             const dados = await resposta.json();
             const estado = dados.ESTADO_LAMPADA;
 
@@ -114,7 +114,7 @@
             <!-- aq vem o innerhtml, onde fica a rota d resposta -->
 
             <div id="status">
-                <span>
+                <span id="resultado">
                     
                 </span>
             </div>
