@@ -1,16 +1,19 @@
-#include<WiFi.h>
+#include<WiFiMulti.h>
 #include <HTTPClient.h>
-const char* rede_wifi = "Wokwi-GUEST"; 
-const char* senha_wifi = ""; 
+#include <ArduinoJson.h>
+const char* rede_wifi = "AAPM";
+const char* senha_wifi = "";
 
-const byte FOTORESISTOR = A0;
+const byte FOTORESISTOR = 35;
 int valorFoto;
 
+WiFiMulti rede;
+
 void conectarWiFi() {
-  rede.addAP(rede_wifi, senha_wifi); 
+  rede.addAP(rede_wifi, senha_wifi); //Inicia a conexão com a rede
   Serial.print("Conectando ao WiFi");
 
-  while (rede.run() != WL_CONNECTED) { 
+  while (rede.run() != WL_CONNECTED) { //Aguarda uma resposta
     delay(1000);
     Serial.print(".");
   }
@@ -22,44 +25,93 @@ void conectarWiFi() {
   Serial.println(WiFi.macAddress());
 }
 
-void setup(){
-conectarWiFi();
-Serial.begin(9600);
-pinMode(FOTORESISTOR, INPUT);
+String lampada_ligada() {
+
+  HTTPClient http;
+
+  http.begin("https://sala-inteligente1.onrender.com/post/lampada/ligada");
+
+  int httpResponCode = http.GET();
+
+  if (httpResponCode == 200) {
+
+    String respostaJson = http.getString();
+
+    return respostaJson;
+  }
+  else {
+
+    Serial.print("Erro HTTP: ");
+
+    Serial.println(httpResponCode);
+
+    return "";
+  }
 }
 
-void loop(){
-HTTPClient http; 
-http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/ligada"); 
-int httpResponCode = http.GET();
-Serial.println(httpResponCode); 
-if(httpResponCode == 200){
-respostaJson = http.getString(); 
-Serial.print(respostaJson);
-}else{
-Serial.print("error ");
-Serial.println(httpResponCode);
+String lampada_desligada() {
+
+  HTTPClient http;
+
+  http.begin("https://sala-inteligente1.onrender.com/post/lampada/desligada");
+
+  int httpResponCode = http.GET();
+
+  if (httpResponCode == 200) {
+
+    String respostaJson = http.getString();
+
+    return respostaJson;
+  }
+  else {
+
+    Serial.print("Erro HTTP: ");
+
+    Serial.println(httpResponCode);
+
+    return "";
+  }
 }
 
 
-HTTPClient http;
-  valorFoto = analogRead(FOTORESISTOR);
-  if(valorFoto<=500){
-    http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/ligada"); 
-    int httpResponCode = http.GET();
-    Serial.println(httpResponCode); 
-    if(!httpResponCode == 200){
-      Serial.print("error ");
-      Serial.println(httpResponCode);
-    }
-  }else{
-  	http.begin("https://sala-inteligente1-nsrl.onrender.com/post/lampada/desligada"); 
-    int httpResponCode = http.GET();
-    Serial.println(httpResponCode); 
-    if(!httpResponCode == 200){
-      Serial.print("error ");
-      Serial.println(httpResponCode);
-    }
+bool processarJSON(String json, DynamicJsonDocument& resultado) {
+
+  DeserializationError error = deserializeJson(resultado, json);
+
+  if (error) {
+
+    Serial.print("Erro no JSON: ");
+
+    Serial.println(error.c_str());
+
+    return false;
   }
 
+  return true;
+}
+
+
+
+void setup() {
+  Serial.begin(9600);
+  conectarWiFi();
+  pinMode(FOTORESISTOR, INPUT);
+}
+
+void loop() {
+
+  HTTPClient http;
+  valorFoto = analogRead(FOTORESISTOR);
+
+  Serial.println(valorFoto);
+  if (valorFoto >= 3000 ) {
+
+    String json = lampada_ligada();
+    Serial.println("A lampada está ligada");
+
+    delay(200);  // Evita múltiplas leituras rápidas
+  } else {
+    String json = lampada_desligada();
+    Serial.println("A lampada está desligada");
+  }
 }
