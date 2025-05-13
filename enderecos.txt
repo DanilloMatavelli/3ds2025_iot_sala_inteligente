@@ -1,0 +1,5 @@
+Endereço do github
+https://github.com/DanilloMatavelli/3ds2025_iot_sala_inteligente
+
+endereço do on render 
+https://sala-inteligente-nsrl.onrender.com

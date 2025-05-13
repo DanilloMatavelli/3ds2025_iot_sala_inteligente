@@ -1,0 +1,6 @@
+Funções Do Grupo
+Trabalho de Acender e Apagar a Luz
+
+Danillo Rodrigues Matavelli – Backend
+Livia Camargo – IOT
+Vitor Terra – Front-end
